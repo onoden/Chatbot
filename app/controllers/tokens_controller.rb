@@ -6,5 +6,5 @@ class TokensController < ApplicationController
       render json: "Error, wrong validation token"
     end
   end
-  
+
 end
