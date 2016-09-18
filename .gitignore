@@ -23,4 +23,5 @@
 /config/database.yml
 .rubocop.yml
 
-/.idea/*
+/.idea
+/vendor/bundle
