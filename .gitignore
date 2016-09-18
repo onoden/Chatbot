@@ -24,3 +24,4 @@
 .rubocop.yml
 
 /.idea/*
+/vendor/bundle
