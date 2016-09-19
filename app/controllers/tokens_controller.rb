@@ -14,7 +14,11 @@ class TokensController < ApplicationController
 
     message = params["entry"][0]["messaging"][0]
 
+    p message
+
     if message.include?("message")
+
+      p "messageあった"
 
       #ユーザーの発言
 
@@ -35,6 +39,8 @@ class TokensController < ApplicationController
         p request
         p result
       }
+
+      p "post完了"
     else
       #botの発言
     end
