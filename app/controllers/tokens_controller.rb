@@ -11,6 +11,7 @@ class TokensController < ApplicationController
     #   p "えらー"
     # end
     callback
+
   end
 
   def callback
@@ -52,7 +53,6 @@ class TokensController < ApplicationController
         #botの発言
       end
     end
-
   end
 
 end
