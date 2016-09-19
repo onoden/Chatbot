@@ -7,6 +7,7 @@ class TokensController < ApplicationController
     else
       render json: "Error, wrong validation token"
       # render json: params["hub.challenge"]
+      puts params["hub.verify_token"]
       p "えらー"
     end
   end
