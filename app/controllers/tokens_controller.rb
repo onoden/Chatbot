@@ -1,19 +1,26 @@
 class TokensController < ApplicationController
+  protect_from_forgery with: :null_session, if: ->{request.format.json?}
   def index
     if params["hub.verify_token"] == "EAAYq0g6YzFcBABj215kItqhn2XwjqZAjDcdEDXiCHivERslw3aHFGZBoYoDmbwpTeAxqn5onvTrCc6FI5k5bupvF8gcrmNqLHA9u7XrX5ZCZCkxToU9qfAzhAYonM8IyQ7LxqZBxIbpC9ZAcvDQiE53ONqWt7maVq0mX1YyCpYEAZDZD"
-      # render json: params["hub.challenge"]
       callback
     else
       render json: "Error, wrong validation token"
+      # render json: params["hub.challenge"]
     end
   end
 
   def callback
+    puts "callback起動"
+
     token = "EAAYq0g6YzFcBABj215kItqhn2XwjqZAjDcdEDXiCHivERslw3aHFGZBoYoDmbwpTeAxqn5onvTrCc6FI5k5bupvF8gcrmNqLHA9u7XrX5ZCZCkxToU9qfAzhAYonM8IyQ7LxqZBxIbpC9ZAcvDQiE53ONqWt7maVq0mX1YyCpYEAZDZD"
 
     message = params["entry"][0]["messaging"][0]
 
+    p message
+
     if message.include?("message")
+
+      p "messageあった"
 
       #ユーザーの発言
 
@@ -34,10 +41,11 @@ class TokensController < ApplicationController
         p request
         p result
       }
+
+      p "post完了"
     else
-      return 0
       #botの発言
     end
   end
-  
+
 end
