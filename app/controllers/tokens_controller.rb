@@ -12,7 +12,13 @@ class TokensController < ApplicationController
   def bot_response(sender, text)
     request_endpoint = "https://graph.facebook.com/v2.6/me/messages?access_token=#{ENV["FACEBOOK_PAGE_TOKEN"]}"
     request_body = text_message_request_body(sender, text)
-    RestClient.post(request_endpoint, request_body, content_type: :json, accept: :json)
+    RestClient.post(request_endpoint, request_body, {
+        'Content-Type' => 'application/json; charset=UTF-8'
+    }){ |response, request, result, &block|
+      p response
+      p request
+      p result
+    }
   end
 
   def text_message_request_body(sender, text)
