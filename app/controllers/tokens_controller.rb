@@ -22,18 +22,24 @@ class TokensController < ApplicationController
   end
 
   def text_message_request_body(sender, text)
+    @text = text
+    natto = Natto::MeCab.new
+    natto.parse(@text) do |n|
+      if n.surface =~ /\d+円?/
+        @text = "記録したよ"
+      end
+    end
     {
         recipient: {
             id: sender
         },
         message: {
-            text: text
+            text: @text
         }
     }.to_json
   end
 
   def callback
-    token = "EAAYq0g6YzFcBABj215kItqhn2XwjqZAjDcdEDXiCHivERslw3aHFGZBoYoDmbwpTeAxqn5onvTrCc6FI5k5bupvF8gcrmNqLHA9u7XrX5ZCZCkxToU9qfAzhAYonM8IyQ7LxqZBxIbpC9ZAcvDQiE53ONqWt7maVq0mX1YyCpYEAZDZD"
     unless params["entry"].nil?
       message = params["entry"][0]["messaging"][0]
       if message.include?("message")
