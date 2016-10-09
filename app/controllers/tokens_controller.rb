@@ -24,10 +24,10 @@ class TokensController < ApplicationController
         sum += e.price
       end
       res_text = "#{sum}円だよー"
-    elsif text =~ /さっきの記録消して/
-      Expense.all.first.delete
-    elsif text =~ /記録全部消して/
-      Expense.delete_all
+    # elsif text =~ /さっきの記録消して/
+    #   Expense.all.first.delete
+    # elsif text =~ /記録全部消して/
+    #   Expense.delete_all
     else
       res_text = response_text(text)
     end
