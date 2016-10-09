@@ -1,11 +1,7 @@
 class TokensController < ApplicationController
   protect_from_forgery with: :null_session, if: ->{request.format.json?}
+  before_action :initialize_items
   def index
-    # if params["hub.verify_token"] == "hogehoge"
-    #   render json: params["hub.challenge"]
-    # else
-    #   render json: "Error, wrong validation token"
-    # end
     callback
   end
 
@@ -22,19 +18,25 @@ class TokensController < ApplicationController
   end
 
   def text_message_request_body(sender, text)
-    @text = text
-    natto = Natto::MeCab.new
-    natto.parse(@text) do |n|
-      if n.surface =~ /\d+円?/
-        @text = "記録したよ"
+    if text =~ /今日の出費は？/
+      sum = 0
+      @expense.all.each do |e|
+        sum += e.price
       end
+      res_text = "#{sum}円だよー"
+    elsif text =~ /さっきの記録消して/
+      Expense.all.first.delete
+    elsif text =~ /記録全部消して/
+      Expense.delete_all
+    else
+      res_text = response_text(text)
     end
     {
         recipient: {
             id: sender
         },
         message: {
-            text: @text
+            text: res_text
         }
     }.to_json
   end
@@ -47,22 +49,55 @@ class TokensController < ApplicationController
         sender = message["sender"]["id"]
         text = message["message"]["text"]
         bot_response(sender, text)
-        # endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + token
-        # request_content = {recipient: {id:sender},
-        #                    message: {text: text}
-        # }
-        # content_json = request_content.to_json
-        # RestClient.post(endpoint_uri, content_json, {
-        #     'Content-Type' => 'application/json; charset=UTF-8'
-        # }){ |response, request, result, &block|
-        #   p response
-        #   p request
-        #   p result
-        # }
       else
         #botの発言
       end
     end
+  end
+
+  private
+
+  def initialize_items
+    @natto = Natto::MeCab.new
+    @expense = Expense.new
+  end
+
+  def response_text(text)
+    price_words = []
+    item_words = []
+    @natto.parse(text) do |n|
+      if n.feature =~ /名詞,数/
+        price_words << n.surface
+      elsif n.feature =~ /名詞,一般/
+        item_words << n.surface
+      end
+    end
+    res_text = response_invalid_input(price_words, item_words)
+    if res_text.nil?
+      saved_record(price_words, item_words)
+      res_text = "記録したよー"
+      res_text
+    end
+  end
+
+  def response_invalid_input(price_words, item_words)
+    if price_words.blank? || item_words.blank?
+      res_text = "買ったものと金額教えてー"
+      res_text
+    else
+      if price_words.size > 1 || item_words.size > 1
+        res_text = "正しく入力してー"
+        res_text
+      else
+        nil
+      end
+    end
+  end
+
+  def saved_record(price_words, item_words)
+    @expense.name = item_words[0]
+    @expense.price = price_words[0]
+    @expense.save
   end
 
 end
