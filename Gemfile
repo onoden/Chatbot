@@ -29,7 +29,7 @@ gem 'erb2haml'
 
 gem 'rest-client'
 
-# gem 'mecab', '~> 0.996'
+gem 'mecab', '~> 0.996'
 gem 'natto'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
