@@ -19,15 +19,24 @@ class TokensController < ApplicationController
 
   def text_message_request_body(sender, text)
     if text =~ /今日の出費は？/
+      res_text = text
       sum = 0
-      @expense.all.each do |e|
-        sum += e.price
+      if Expense.all.present?
+        Expense.all.each do |e|
+          sum += e.price
+        end
+        res_text = "#{sum}円だよー"
+      else
+        "0円だよー"
       end
-      res_text = "#{sum}円だよー"
-    # elsif text =~ /さっきの記録消して/
-    #   Expense.all.first.delete
-    # elsif text =~ /記録全部消して/
-    #   Expense.delete_all
+    elsif text =~ /さっきの記録消して/
+      if Expense.all.present?
+        Expense.all.last.delete
+        res_text = "消したよー"
+      end
+    elsif text =~ /記録全部消して/
+      Expense.delete_all
+      res_text = "記録全消し"
     else
       res_text = response_text(text)
     end
