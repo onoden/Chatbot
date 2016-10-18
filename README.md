@@ -1,24 +1,11 @@
-# README
+# MessengerAPIを使ってbot機能を実装してみた
+## 開発環境
++ Ruby
++ Ruby on Rails
++ MySQL
++ Heroku
++ mecab
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+##最終目標
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+家計簿をbot形式でつけれるようにする
