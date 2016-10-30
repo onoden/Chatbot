@@ -5,7 +5,3 @@
 + MySQL
 + Heroku
 + mecab
-
-##最終目標
-
-家計簿をbot形式でつけれるようにする
